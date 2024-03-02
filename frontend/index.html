@@ -1,0 +1,49 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <form id="loginForm">
+            <h2>Login</h2>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"
+                required><br><br>
+            <button type="submit">Login</button>
+        </form>
+
+        <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        alert('Login successful!');
+        
+        window.location.href = '/booking.html';
+      } else {
+        alert(data.message);
+      }
+    });
+  </script>
+    </body>
+</html>

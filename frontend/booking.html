@@ -1,0 +1,54 @@
+<!-- frontend/booking.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Booking</title>
+        <link rel="stylesheet" href="booking.css">
+    </head>
+
+    <body>
+
+        <form id="bookingForm">
+            <h2>Booking</h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required><br><br>
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time" required><br><br>
+            <button type="submit">Book Now</button>
+        </form>
+
+        <script>
+        document.getElementById('bookingForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            const response = await fetch('/book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ name, date, time })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Booking successful!');
+                window.location.href = '/dashboard.html'; // Redirect to dashboard.html
+            } else {
+                alert(data.message);
+            }
+        });
+    </script>
+    </body>
+
+</html>

@@ -1,0 +1,54 @@
+<!-- frontend/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <link rel="stylesheet" href="dashboard.css">
+    </head>
+    <body>
+        <h2>Dashboard</h2>
+        <div id="bookingList"></div>
+
+        <script>
+        async function fetchBookings() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const bookings = await response.json();
+                console.log('Bookings:', bookings); // Log bookings data to the console
+                displayBookings(bookings);
+            } catch (error) {
+                console.error('Error fetching bookings:', error);
+            }
+        }
+
+        function displayBookings(bookings) {
+            const bookingList = document.getElementById('bookingList');
+            bookingList.innerHTML = '';
+
+            if (bookings.length === 0) {
+                const noBookingsMessage = document.createElement('p');
+                noBookingsMessage.textContent = 'No bookings found.';
+                bookingList.appendChild(noBookingsMessage);
+            } else {
+                bookings.forEach(booking => {
+                    const bookingItem = document.createElement('div');
+                    bookingItem.innerHTML = `<p><strong>Name:</strong> ${booking.name}</p>
+                                            <p><strong>Date:</strong> ${booking.date}</p>
+                                            <p><strong>Time:</strong> ${booking.time}</p>
+                                            <hr>`;
+                    bookingList.appendChild(bookingItem);
+                });
+            }
+        }
+
+        fetchBookings();
+    </script>
+    </body>
+</html>
